@@ -206,23 +206,6 @@ mouse(int button, int state, int x, int y)
             cout<<"-------------eqn of plane----------"<<endl;
             cout<<(ca*sb)<<" "<<(-sa)<<" "<<(cb*ca)<<endl;
 
-            //ignore
-
-            //x = x1 + r * d1
-            //y = y1 + r * d2
-            //z = z1 + r * d3
-            // r = -ca * sb * x1  + sa * y1 - cb * ca * ( z1 + 220)
-                   //----------------------------------------------
-            //      ca * sb * d1 - sa * d2 + cb * ca * d3
-
-            // float d = sqrt((x2-x1)* (x2-x1) + (y2 - y1) * (y2 - y1) + (z2 - z1)* (z2-z1));
-            // float d1 = (x2 - x1)/ d;
-            // float d2 = (y2 - y1)/ d;
-            // float d3 = (z2 - z1)/ d;
-            // float r = (-ca * sb * x1 + sa * y1 - cb * ca * (z1 + 220))/ (ca * sb * d1 - sa * d2 + cb * ca * d3);
-            // float a = x1 + r * d1, b = y1 + r * d2, c = z1 + r * d3;
-
-
             //correct 
 
             // x = r * x1 + (1-r) * x2;
@@ -230,25 +213,6 @@ mouse(int button, int state, int x, int y)
             // z = r * z1 + (1-r) * z2;
             float r = ((-ca*sb)*x2 + sa * y2 - (cb * ca)*(z2 + 220))/((ca*sb)*(x1-x2) + (-sa)*(y1-y2) + (cb*ca)*(z1-z2));
             float a = x1 * r + (1-r)* x2, b = y1 * r + (1-r) * (y2), c = z1 * r + (1-r)*z2; 
-
-            //ignore
-            //translate back to original
-            // z += 220
-            // fx = (cb * x + sa * sb * y - ca * sb * z)
-            // fy = (ca * y + sa * z)
-            // fz = (sb * x - sa * cb * y + ca * cb * z)
-
-            //final
-            // float beta = ((spin_y - 60) * M_PI)/ 360.0;
-            // float alpha = (spin_x * M)
-            
-
-            //ignore
-
-            // float fx = (cb * a + sa * sb * b - ca * sb * c);
-            // float fy = (ca * b + sa * c);
-            // float fz = (sb * a - sa * cb * b + ca * cb * c);
-
 
             // correct
 
