@@ -85,6 +85,31 @@ void calcwater() {
 			water[f][x][y] = n;
 	}
 
+    for (x = 1; x < 90; x++)
+    {
+        water[f][x][99] = 0;
+        water[f][x][100] = 0;
+        water[f][x][101] = 0;
+        water[f][x][102] = 0;
+
+        water[t][x][99] = 0;
+        water[t][x][100] = 0;
+        water[t][x][101] = 0;
+        water[t][x][102] = 0;
+    }
+
+    for (x = 110; x < WATERSIZE - 1; x++)
+    {
+        water[f][x][99] = 0;
+        water[f][x][100] = 0;
+        water[f][x][101] = 0;
+        water[f][x][102] = 0;
+
+        water[t][x][99] = 0;
+        water[t][x][100] = 0;
+        water[t][x][101] = 0;
+        water[t][x][102] = 0;
+    }
 }
 
 
@@ -119,12 +144,21 @@ void display(void) {
 	calcwater();
 	glBegin(GL_POINTS);
 	for(i = 0; i < WATERSIZE; i++) {
-		for(j = 0; j < WATERSIZE; j++) {
-				glColor3f(0,0,1);
-			glVertex3f(j-WATERSIZE/2, i-WATERSIZE/2, water[t][j][i]);
+		for(j = 0; j < WATERSIZE; j++) 
+        {
+			if(((i>98) & (i<103)) & ((j<90) | (j>109)))
+            {
+                glColor3f(1, 0, 0);
+                glVertex3f(j - WATERSIZE / 2, i - WATERSIZE / 2, water[t][j][i]);
+            }
+            else
+            {
+                glColor3f(0, 0, 1);
+                glVertex3f(j - WATERSIZE / 2, i - WATERSIZE / 2, water[t][j][i]);
+            }            
 		}
 	}
-	glEnd();
+    glEnd();
 
 	tmp = t; t = f; f = tmp;
 
