@@ -43,72 +43,28 @@ void calcwater() {
 
 	y = 0;
 	for(x = 1; x < WATERSIZE-1; x++) {
-			n = ( water[t][x-1][y] +
-				  water[t][x+1][y] + 
-				  water[t][x][y+1]
-				  ) / b;
-			n -= water[f][x][y];
-      		n = n - (n / DAMP);
-			water[f][x][y] = n;
-	}
-	
-	
+            water[f][x][y] = 0;
+            water[f][x][y + 1] = 0;
+            water[f][x][y + 2] = 0;
+    }
 	x = 0;
 	for(y = 1; y < WATERSIZE-1; y++) {
-			n = ( water[t][x+1][y] + 
-				  water[t][x][y-1] + 
-				  water[t][x][y+1]
-				  ) / b;
-			n -= water[f][x][y];
-      		n = n - (n / DAMP);
-			water[f][x][y] = n;
-	}
+            water[f][x][y] = 0;
+            water[f][x + 1][y] = 0;
+            water[f][x + 2][y] = 0;
+    }
 
 	x = WATERSIZE-1;
 	for(y = 1; y < WATERSIZE-1; y++) {
-			n = ( water[t][x-1][y] +
-				  water[t][x][y-1] + 
-				  water[t][x][y+1]
-				  ) / b;
-			n -= water[f][x][y];
-      		n = n - (n / DAMP);
-			water[f][x][y] = n;
-	}
+            water[f][x][y] = 0;
+            water[f][x - 1][y] = 0;
+            water[f][x - 2][y] = 0;
+    }
 	y = WATERSIZE-1;
 	for(x = 1; x < WATERSIZE-1; x++) {
-			n = ( water[t][x-1][y] +
-				  water[t][x+1][y] + 
-				  water[t][x][y-1] 
-				  ) / b;
-			n -= water[f][x][y];
-      		n = n - (n / DAMP);
-			water[f][x][y] = n;
-	}
-
-    for (x = 1; x < 90; x++)
-    {
-        water[f][x][99] = 0;
-        water[f][x][100] = 0;
-        water[f][x][101] = 0;
-        water[f][x][102] = 0;
-
-        water[t][x][99] = 0;
-        water[t][x][100] = 0;
-        water[t][x][101] = 0;
-        water[t][x][102] = 0;
-    }
-
-    for (x = 110; x < WATERSIZE - 1; x++)
-    {
-        water[f][x][99] = 0;
-        water[f][x][100] = 0;
-        water[f][x][101] = 0;
-        water[f][x][102] = 0;
-
-        water[t][x][99] = 0;
-        water[t][x][100] = 0;
-        water[t][x][101] = 0;
-        water[t][x][102] = 0;
+            water[f][x][y] = 0;
+            water[f][x][y - 1] = 0;
+            water[f][x][y - 2] = 0;
     }
 }
 
@@ -129,24 +85,20 @@ void display(void) {
     int i, j, tmp;
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-
+    glClearColor(1.0, 1.0, 1.0, 1.0);
     glPushMatrix();
-
     glTranslatef(0, 0, spin_z-220);
-
     glRotatef(spin_x, 0, 1, 0);
-
-
     glRotatef(spin_y-60, 1, 0, 0);
     // cout<<"spinx and spiny"<<spin_x <<" "<<spin_y<<endl;
     
 	calcwater();
-	glBegin(GL_POINTS);
+    glPointSize(3);
+    glBegin(GL_POINTS);
 	for(i = 0; i < WATERSIZE; i++) {
 		for(j = 0; j < WATERSIZE; j++) 
         {
-			if(((i>98) & (i<103)) & ((j<90) | (j>109)))
+            if ( ((i > (WATERSIZE - 4))) | ((i < (3))) | ((j > (WATERSIZE - 4))) | ((j < (3))))
             {
                 glColor3f(1, 0, 0);
                 glVertex3f(j - WATERSIZE / 2, i - WATERSIZE / 2, water[t][j][i]);
@@ -159,26 +111,26 @@ void display(void) {
 		}
 	}
     glEnd();
-
 	tmp = t; t = f; f = tmp;
 
-
-    glPopMatrix();
-
-    
+    glPopMatrix();    
     glutSwapBuffers();
 }
 
-// int num  = 0;
-// int delay = 70;
 void idle(void)
 {
-	
-	// if(!(++num %delay))
-	// {
-	// 	water[f][rand()%WATERSIZE][rand()%WATERSIZE] = -rand()%200;
-	// 	delay = rand()%100 + 50;
-	// }
+    glutPostRedisplay();
+}
+
+int num = 0;
+int delay = 70;
+void idle1(void)
+{
+    if (!(++num % delay))
+    {
+        water[f][rand() % WATERSIZE][rand() % WATERSIZE] = -rand() % 200;
+        delay = rand() % 100 + 50;
+    }
     glutPostRedisplay();
 }
 
@@ -269,13 +221,9 @@ mouse(int button, int state, int x, int y)
             cout<<r<<endl;
 
             if(fx>=0 and fy>=0 and fx<=200 and fy<=200)
-                water[f][(int)fx][(int)fy] = -200; 
+                water[f][(int)fx][(int)fy] = -300; 
             glutPostRedisplay();
         }
-    }      
-    else if(button == GLUT_RIGHT_BUTTON){
-        old_y = y - spin_z;
-        move_z = (move_z ? 0 : 1);
     }
     glutPostRedisplay();
 
@@ -300,8 +248,8 @@ keyboard(unsigned char key, int x, int y)
 {
     static int old_x = 50;
     static int old_y = 50;
-    static int old_width = 512;
-    static int old_height = 512;
+    static int old_width = 800;
+    static int old_height = 800;
 
     switch (key) {
         case 'x':
@@ -318,7 +266,12 @@ keyboard(unsigned char key, int x, int y)
                 glutReshapeWindow(old_width, old_height);
             }
             break;
-		default:
+        case 'i':
+            glutIdleFunc(idle);
+            break;
+        case 'r':
+            glutIdleFunc(idle1);
+        default:
             break;
     }
 }
@@ -350,10 +303,10 @@ main(int argc, char** argv)
 
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
     glutInitWindowPosition(50, 50);
-    glutInitWindowSize(512, 512);
+    glutInitWindowSize(1300, 800);
     glutInit(&argc, argv);
-
-    glutCreateWindow("Simulating Water");
+    glClearColor(1.0, 1.0, 1.0, 1.0);
+    glutCreateWindow("Water Ripple Simulation");
     glutDisplayFunc(display);
     glutReshapeFunc(reshape);
 
@@ -363,14 +316,6 @@ main(int argc, char** argv)
 
     glEnable (GL_DEPTH_TEST);
 
-    if(argc == 2) {
-        if (strcmp(argv[1], "-h") == 0) {
-            fprintf(stderr, "%s [depth]\n", argv[0]);
-            exit(0);
-        }
-        sscanf(argv[1], "%d", &depth);
-    }
-
 	printf("Water Simulation \n");
     init();
 
@@ -378,4 +323,3 @@ main(int argc, char** argv)
     glutMainLoop();
     return 0;
 }
-
